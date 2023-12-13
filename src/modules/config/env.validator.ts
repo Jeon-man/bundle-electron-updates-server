@@ -75,6 +75,9 @@ export class EnvironmentVariables {
   @IsOptional()
   @IsString()
   PRIVATE_KEY_PATH?: string | null;
+
+  @IsString()
+  GIT_TOKEN: string;
 }
 
 export const validateConfig = createValidator(EnvironmentVariables, {
