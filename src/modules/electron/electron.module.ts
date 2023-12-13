@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 
-import * as M from './models';
 import { isModelClass } from '@util/sequelize';
-import { ElectronService } from './electron.service';
 import { ElectronController } from './electron.controller';
+import { ElectronService } from './electron.service';
 import { GithubModule } from './github';
+import * as M from './models';
 
 const models = Object.values(M).filter(isModelClass);
 

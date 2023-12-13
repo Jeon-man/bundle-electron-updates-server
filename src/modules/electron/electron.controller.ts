@@ -1,9 +1,9 @@
-import { Controller, Get, Header, Param, Query, Res } from '@nestjs/common';
+import { Controller, Get, Param, Query, Res } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ManifestQueryDto } from '@util/common';
 import { Response } from 'express';
-import { ElectronPlatform } from './electron.types';
 import { ElectronService } from './electron.service';
+import { ElectronPlatform } from './electron.types';
 import { GithubService } from './github';
 
 @ApiTags('electron')

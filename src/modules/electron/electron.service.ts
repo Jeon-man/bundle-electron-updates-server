@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { ElectronManifest } from './models';
 import { ManifestQueryDto } from '@util/common';
 import { ElectronPlatform } from './electron.types';
+import { ElectronManifest } from './models';
 
 @Injectable()
 export class ElectronService {

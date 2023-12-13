@@ -1,8 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Include, isNotNullable } from '@util/types';
 import { InferAttributes, InferCreationAttributes, ModelStatic } from 'sequelize';
 import { Column, Model } from 'sequelize-typescript';
-import { ApiProperty } from '@nestjs/swagger';
 import { BINARY_UUID } from './types';
-import { Include, isNotNullable } from '@util/types';
 
 export class BaseManifestModel<T extends Model> extends Model<
   InferAttributes<T>,
