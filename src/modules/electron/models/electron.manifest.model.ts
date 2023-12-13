@@ -1,4 +1,4 @@
-import { BaseManifestModel } from '@util/sequelize/sequelize';
+import { BaseManifestModel } from '@util/sequelize';
 import { Column, Table } from 'sequelize-typescript';
 import { ElectronPlatform } from '../electron.types';
 
