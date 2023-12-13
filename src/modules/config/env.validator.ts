@@ -72,8 +72,6 @@ export class EnvironmentVariables {
   @IsString()
   FILE_LOCAL_STORAGE_PATH: string = './storage';
 
-  // sSigning
-
   @IsOptional()
   @IsString()
   PRIVATE_KEY_PATH?: string | null;
