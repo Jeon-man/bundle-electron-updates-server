@@ -6,7 +6,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import Case from 'case';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
 
   const config: ConfigService = app.get(ConfigService);
   const NODE_ENV = config.get<string>('NODE_ENV');
@@ -44,7 +43,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
 
-  SwaggerModule.setup('api-docs', app, document, {
+  SwaggerModule.setup('/api-docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
       authAction: {
@@ -68,5 +67,6 @@ async function bootstrap() {
     customJs: 'https://cdn.flarelane.com/WebSDK.js',
     customJsStr: `FlareLane.initialize({ projectId: "c95fa7be-3d99-4d6f-8054-1cac6c3ed05a" });`,
   });
+  await app.listen(3000);
 }
 bootstrap();
