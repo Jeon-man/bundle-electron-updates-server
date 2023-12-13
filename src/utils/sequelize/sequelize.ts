@@ -1,11 +1,19 @@
-import { InferAttributes, InferCreationAttributes } from 'sequelize';
+import { InferAttributes, InferCreationAttributes, ModelStatic } from 'sequelize';
 import { Column, Model } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
+import { BINARY_UUID } from './types';
+import { Include, isNotNullable } from '@util/types';
 
 export class BaseManifestModel<T extends Model> extends Model<
   InferAttributes<T>,
   InferCreationAttributes<T>
 > {
+  @ApiProperty({
+    description: 'manifest uuid',
+  })
+  @Column(BINARY_UUID())
+  uuid: string;
+
   @ApiProperty({
     description: 'manifest version',
   })
@@ -18,3 +26,6 @@ export class BaseManifestModel<T extends Model> extends Model<
   @Column
   releaseName: string;
 }
+
+export const isModelClass = <T>(m: T): m is Include<T, ModelStatic<Model<any, any>>> =>
+  isNotNullable(m) && (m as any).prototype instanceof Model;
