@@ -4,7 +4,7 @@ import { ManifestQueryDto } from '@util/common';
 import { Response } from 'express';
 import { ElectronPlatform } from './electron.types';
 import { ElectronService } from './electron.service';
-import { GithubService } from '@module/github';
+import { GithubService } from './github';
 
 @ApiTags('electron')
 @Controller('electron')

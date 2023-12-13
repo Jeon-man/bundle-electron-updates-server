@@ -3,4 +3,3 @@ export { default as appModule } from './app';
 export { default as configModule } from './config';
 export { default as dbModule } from './db';
 export { default as electronModule } from './electron';
-export { default as githubModule } from './github';

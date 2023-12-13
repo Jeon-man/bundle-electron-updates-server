@@ -3,7 +3,6 @@ export * from './app';
 export * from './config';
 export * from './db';
 export * from './electron';
-export * from './github';
 export * from './modules';
 // @endindex
 
