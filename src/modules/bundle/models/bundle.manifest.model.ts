@@ -2,7 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseManifestModel } from '@util/sequelize';
 import { JSON_STRING } from '@util/sequelize/types';
 import { Column, DataType, Table } from 'sequelize-typescript';
-import { BundlePlatform, Bundler, ModuleFederationConfig } from '../bundle.types';
+import {
+  BundlePlatform,
+  BundlePlatformList,
+  Bundler,
+  ModuleFederationConfig,
+} from '../bundle.types';
 
 @Table({
   tableName: 'BundleManifest',
@@ -25,7 +30,7 @@ export class BundleManifest extends BaseManifestModel<BundleManifest> {
     example: 'ios',
   })
   @Column({
-    type: DataType.STRING,
+    type: DataType.ENUM(...BundlePlatformList),
   })
   platform: BundlePlatform;
 
