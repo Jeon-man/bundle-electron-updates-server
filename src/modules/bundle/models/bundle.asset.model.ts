@@ -17,6 +17,11 @@ export class BundleAsset extends Model<
     description: 'Bundle asset hash key',
   })
   @Column(BINARY_UUID())
+  uuid: string;
+
+  @ApiProperty({
+    description: 'file.buffer hash value',
+  })
   hash: string;
 
   @ApiProperty({
