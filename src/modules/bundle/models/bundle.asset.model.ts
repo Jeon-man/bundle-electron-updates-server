@@ -9,7 +9,10 @@ import { Column, Model, Table } from 'sequelize-typescript';
   timestamps: true,
   paranoid: true,
 })
-export class Bundle extends Model<InferAttributes<Bundle>, InferCreationAttributes<Bundle>> {
+export class BundleAsset extends Model<
+  InferAttributes<BundleAsset>,
+  InferCreationAttributes<BundleAsset>
+> {
   @ApiProperty({
     description: 'Bundle asset hash key',
   })
