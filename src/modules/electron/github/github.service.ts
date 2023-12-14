@@ -47,4 +47,21 @@ export class GithubService implements OnApplicationBootstrap {
 
     return headers.location;
   }
+
+  async existRelease(tag: string) {
+    try {
+      const { data: release } = await this.octokit.request(
+        'GET /repos/{owner}/{repo}/releases/tags/{tag}',
+        {
+          owner: this.config.get('GIT_OWNER') as string,
+          repo: this.config.get('GIT_REPOSITORY') as string,
+          tag: `v${tag}`,
+        },
+      );
+      if (!release) return false;
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
 }

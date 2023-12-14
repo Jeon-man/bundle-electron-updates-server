@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ManifestQueryDto } from '@util/common';
 import { Response } from 'express';
+import { CreateManifestBody } from './electron.dto';
 import { ElectronService } from './electron.service';
 import { ElectronPlatform } from './electron.types';
 import { GithubService } from './github';
@@ -36,5 +37,13 @@ export class ElectronController {
 
     res.setHeader('Location', downloadUrl);
     res.status(302).send();
+  }
+
+  @ApiOperation({
+    summary: 'create electron manifest',
+  })
+  @Post()
+  async createManifest(@Body() createBody: CreateManifestBody) {
+    return this.electronService.createManifest(createBody);
   }
 }
