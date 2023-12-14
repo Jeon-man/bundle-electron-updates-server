@@ -20,6 +20,9 @@ export class BundleManifest extends BaseManifestModel<BundleManifest> implements
   })
   bundler: Bundler;
 
+  @ApiProperty({
+    description: 'Module have federation config',
+  })
   @Column(JSON_STRING(DataType.TEXT))
   moduleFederationConfig: ModuleFederationConfig;
 }

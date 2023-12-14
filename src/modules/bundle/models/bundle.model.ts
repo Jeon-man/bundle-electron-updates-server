@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { BINARY_UUID } from '@util/sequelize/types';
 import { InferAttributes, InferCreationAttributes } from 'sequelize';
 import { Column, Model, Table } from 'sequelize-typescript';
@@ -9,9 +10,15 @@ import { Column, Model, Table } from 'sequelize-typescript';
   paranoid: true,
 })
 export class Bundle extends Model<InferAttributes<Bundle>, InferCreationAttributes<Bundle>> {
+  @ApiProperty({
+    description: 'Bundle asset hash key',
+  })
   @Column(BINARY_UUID())
   hash: string;
 
+  @ApiProperty({
+    description: 'Path where the asset is stored',
+  })
   @Column
   path: string;
 }
