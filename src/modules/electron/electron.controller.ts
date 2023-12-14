@@ -42,7 +42,7 @@ export class ElectronController {
   @ApiOperation({
     summary: 'create electron manifest',
   })
-  @Post()
+  @Post('manifests')
   async createManifest(@Body() createBody: CreateManifestBody) {
     return this.electronService.createManifest(createBody);
   }
