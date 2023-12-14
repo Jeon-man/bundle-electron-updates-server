@@ -13,7 +13,7 @@ import { BundlePlatform, Bundler, ModuleFederationConfig } from '../bundle.types
 export class BundleManifest extends BaseManifestModel<BundleManifest> {
   @ApiProperty({
     description: 'bundler type',
-    example: 'web',
+    example: 'webpack',
   })
   @Column({
     type: DataType.STRING,
