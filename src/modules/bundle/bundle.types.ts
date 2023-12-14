@@ -19,7 +19,7 @@ export interface ModuleFederationConfig {
 export interface BundleMetadata {
   version: 0;
   bundler: Bundler;
-  bundleMetadata: Record<BundlePlatform, BundleAsset[]>;
+  platformMetadata: Record<BundlePlatform, BundleAsset[]>;
 }
 
 export const hexUuidRegexRaw = '[0-9a-f]{32}';
