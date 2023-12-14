@@ -16,7 +16,7 @@ export interface ModuleFederationConfig {
   version: string;
 }
 
-export interface Metadata {
+export interface BundleMetadata {
   version: 0;
   bundler: Bundler;
   bundleMetadata: Record<BundlePlatform, BundleAsset[]>;
