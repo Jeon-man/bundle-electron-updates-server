@@ -13,7 +13,7 @@ export class MulterConfigService implements MulterOptionsFactory {
 
   createMulterOptions(): MulterModuleOptions {
     const destinationFn = (req: Request, file: Express.Multer.File) =>
-      this.config.get('FILE_LOCAL_STORAGE_PATH') as string;
+      this.config.get('FILE_LOCAL_STORAGE_PATH');
 
     const filenameFn = async (req: Request, file: Express.Multer.File) => {
       const filename = file.originalname;

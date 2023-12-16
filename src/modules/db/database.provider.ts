@@ -10,11 +10,11 @@ export class DatabaseProvider implements SequelizeOptionsFactory {
     const isProduction = this.config.get('NODE_ENV') === 'production';
 
     const dialect = this.config.get('DB_DIALECT');
-    const host = this.config.get<string>('DB_HOST');
-    const port = this.config.get<number>('DB_PORT');
-    const username = this.config.get<string>('DB_USERNAME');
-    const database = this.config.get<string>('DB_DATABASE');
-    const password = this.config.get<string>('DB_PASSWORD');
+    const host = this.config.get('DB_HOST');
+    const port = this.config.get('DB_PORT');
+    const username = this.config.get('DB_USERNAME');
+    const database = this.config.get('DB_DATABASE');
+    const password = this.config.get('DB_PASSWORD');
 
     return {
       dialect,

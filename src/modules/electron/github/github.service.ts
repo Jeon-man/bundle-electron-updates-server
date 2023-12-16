@@ -14,7 +14,7 @@ export class GithubService implements OnApplicationBootstrap {
 
   onApplicationBootstrap() {
     this.octokit = new Octokit({
-      auth: this.config.get<string>('GIT_TOKEN'),
+      auth: this.config.get('GIT_TOKEN'),
     });
   }
 
@@ -22,8 +22,8 @@ export class GithubService implements OnApplicationBootstrap {
     const {
       data: { assets },
     } = await this.octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
-      owner: this.config.get('GIT_OWNER') as string,
-      repo: this.config.get('GIT_REPOSITORY') as string,
+      owner: this.config.get('GIT_OWNER'),
+      repo: this.config.get('GIT_REPOSITORY'),
       tag: `v${runtimeVersion}`,
     });
 
@@ -34,8 +34,8 @@ export class GithubService implements OnApplicationBootstrap {
     const { headers } = await this.octokit.request(
       'GET /repos/{owner}/{repo}/releases/assets/{asset_id}',
       {
-        owner: this.config.get('GIT_OWNER') as string,
-        repo: this.config.get('GIT_REPOSITORY') as string,
+        owner: this.config.get('GIT_OWNER'),
+        repo: this.config.get('GIT_REPOSITORY'),
         asset_id: selectedManifestAsset.id,
         headers: {
           Accept: 'application/octet-stream',
@@ -53,8 +53,8 @@ export class GithubService implements OnApplicationBootstrap {
       const { data: release } = await this.octokit.request(
         'GET /repos/{owner}/{repo}/releases/tags/{tag}',
         {
-          owner: this.config.get('GIT_OWNER') as string,
-          repo: this.config.get('GIT_REPOSITORY') as string,
+          owner: this.config.get('GIT_OWNER'),
+          repo: this.config.get('GIT_REPOSITORY'),
           tag: `v${tag}`,
         },
       );
