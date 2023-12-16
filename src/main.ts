@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import Case from 'case';
+import fs from 'fs';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -67,6 +69,11 @@ async function bootstrap() {
     customJs: 'https://cdn.flarelane.com/WebSDK.js',
     customJsStr: `FlareLane.initialize({ projectId: "c95fa7be-3d99-4d6f-8054-1cac6c3ed05a" });`,
   });
+
+  const FILE_LOCAL_STORAGE_PATH = config.get<string>('FILE_LOCAL_STORAGE_PATH') as string;
+
+  if (fs.existsSync(FILE_LOCAL_STORAGE_PATH)) fs.mkdirSync(FILE_LOCAL_STORAGE_PATH);
+
   await app.listen(3000);
 }
 bootstrap();
