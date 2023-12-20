@@ -46,6 +46,15 @@ export class BundleManifest extends BaseManifestModel<BundleManifest> {
   @Column(JSON_STRING(DataType.TEXT))
   moduleFederationConfig: ModuleFederationConfig;
 
+  @ApiProperty({
+    description: 'typescript url',
+  })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  typeIndexJsonUrl?: string;
+
   @BelongsToMany(() => BundleAsset, () => BundleManifest_Asset)
   assets?: BundleAsset[];
 
