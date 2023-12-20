@@ -78,6 +78,12 @@ export class EnvironmentVariables {
 
   @IsString()
   GIT_TOKEN: string;
+
+  @IsString()
+  GIT_OWNER: string;
+
+  @IsString()
+  GIT_REPOSITORY: string;
 }
 
 export const validateConfig = createValidator(EnvironmentVariables, {
