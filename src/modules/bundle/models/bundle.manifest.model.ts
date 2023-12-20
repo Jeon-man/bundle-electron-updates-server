@@ -5,7 +5,7 @@ import {
   BelongsToMany as BelongsToManyAssociation,
   HasMany as HasManyAssociation,
 } from 'sequelize';
-import { BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, HasMany, HasOne, Table } from 'sequelize-typescript';
 import {
   BundlePlatform,
   BundlePlatformList,
@@ -47,13 +47,16 @@ export class BundleManifest extends BaseManifestModel<BundleManifest> {
   moduleFederationConfig: ModuleFederationConfig;
 
   @ApiProperty({
-    description: 'typescript url',
+    description: 'Bundle typescript index json asset',
   })
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  typeIndexJsonUrl?: string;
+  typeIndexJsonId?: string;
+
+  @HasOne(() => BundleAsset)
+  typeIndexJson?: BundleAsset;
 
   @BelongsToMany(() => BundleAsset, () => BundleManifest_Asset)
   assets?: BundleAsset[];
