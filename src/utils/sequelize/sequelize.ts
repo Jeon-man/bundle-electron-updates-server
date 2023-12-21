@@ -4,7 +4,10 @@ import { ModelStatic } from 'sequelize';
 import { Column, Model } from 'sequelize-typescript';
 import { BINARY_UUID } from './types';
 
-export class BaseManifestModel<TInferAttributes extends {}, TInferCreationAttributes extends {}>
+export abstract class BaseManifestModel<
+    TInferAttributes extends {},
+    TInferCreationAttributes extends {},
+  >
   extends Model<
     TInferAttributes & IBaseManifest,
     TInferCreationAttributes & Omit<IBaseManifest, 'id' | `${string}At`>

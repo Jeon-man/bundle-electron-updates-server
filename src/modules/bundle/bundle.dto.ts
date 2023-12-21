@@ -38,13 +38,13 @@ export class BundleManifestFindQuery {
   @ApiPropertyOptional({ type: BundlePlatform })
   @IsEnum(BundlePlatform)
   @IsOptional()
-  bundlePlatform: BundlePlatform;
+  platform: BundlePlatform;
 
   toFindOptions(): FindOptions<BundleManifest> {
     return {
       where: {
         ...(this.version ? { version: this.version } : {}),
-        ...(this.bundlePlatform ? { bundlePlatform: this.bundlePlatform } : {}),
+        ...(this.platform ? { platform: this.platform } : {}),
       },
     };
   }
