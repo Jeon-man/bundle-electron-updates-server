@@ -8,6 +8,8 @@ export class BaseManifestModel<TInferAttributes extends {}, TInferCreationAttrib
   extends Model<TInferAttributes & IBaseManifest, TInferCreationAttributes & IBaseManifest>
   implements IBaseManifest
 {
+  readonly id: number;
+
   @ApiProperty({
     description: 'manifest uuid',
   })
@@ -25,9 +27,18 @@ export class BaseManifestModel<TInferAttributes extends {}, TInferCreationAttrib
   })
   @Column
   releaseName: string;
+
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+  readonly deletedAt?: Date | null;
 }
 
 interface IBaseManifest {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+
   uuid: string;
   runtimeVersion: string;
   releaseName: string;

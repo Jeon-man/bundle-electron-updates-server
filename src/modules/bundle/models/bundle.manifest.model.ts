@@ -22,10 +22,10 @@ import { BundleManifest_Asset } from './manifest_asset.model';
   timestamps: true,
   paranoid: true,
 })
-export class BundleManifest extends BaseManifestModel<
-  BundleManifestAttributes,
-  BundleManifestCreationAttributes
-> {
+export class BundleManifest
+  extends BaseManifestModel<BundleManifestAttributes, BundleManifestCreationAttributes>
+  implements IBundleManifest
+{
   @ApiProperty({
     description: 'bundler type',
     example: 'webpack',
@@ -75,11 +75,6 @@ export class BundleManifest extends BaseManifestModel<
 }
 
 interface IBundleManifest {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date | null;
-
   platform: BundlePlatform;
   moduleFederationConfig: ModuleFederationConfig;
   typeIndexJsonId?: string;
