@@ -14,7 +14,7 @@ export interface ModuleFederationConfig {
   version: string;
 }
 
-interface BundleAsset {
+export interface IBundleAsset {
   hash: string;
   path: string;
 }
@@ -22,7 +22,7 @@ interface BundleAsset {
 export interface BundleMetadata {
   version: 0;
   bundler: Bundler;
-  platformMetadata: Record<BundlePlatform, BundleAsset[]>;
+  platformMetadata: Record<BundlePlatform, IBundleAsset[]>;
 }
 
 export const hexUuidRegexRaw = '[0-9a-f]{32}';
