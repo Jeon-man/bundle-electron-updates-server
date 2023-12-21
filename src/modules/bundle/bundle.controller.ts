@@ -58,6 +58,7 @@ export class BundleController {
       Partial<Record<'typeIndexJson', Express.Multer.File>>,
     @Body() bundleData: CreateBundleBody,
   ) {
+    /** @todo Define swagger body on this*/
     await this.sequelize.transaction(async () => {
       await this.bundleService.createBundle(bundleFiles, bundleData);
     });
