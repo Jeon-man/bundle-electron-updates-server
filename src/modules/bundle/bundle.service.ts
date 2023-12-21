@@ -6,6 +6,7 @@ import { CreateBundleBody } from './bundle.dto';
 import { BundleAsset, BundleManifest } from './models';
 
 import fs from 'fs';
+import { CreationAttributes } from 'sequelize';
 import { BundlePlatform, ModuleFederationConfig } from './bundle.types';
 
 @Injectable()
@@ -52,7 +53,7 @@ export class BundleService {
 
       const platformBundles = metadata.platformMetadata[platform as BundlePlatform];
 
-      const createdAssets: BundleAsset[] = [];
+      const bulkCreateAssetsDto: CreationAttributes<BundleAsset>[] = [];
       const failedAssetHashs: string[] = [];
       for (const bundle of platformBundles) {
         const bundleAsset = assets.find(asset => asset.originalname === bundle.hash);
@@ -62,18 +63,21 @@ export class BundleService {
           continue;
         }
 
-        const createdBundleAsset = await this.bundleAssetRepo.create({
+        bulkCreateAssetsDto.push({
           uuid: bundleAsset.filename,
           hash: bundle.hash,
           path: bundle.path,
         });
-
-        createdAssets.push(createdBundleAsset);
       }
+
       if (failedAssetHashs.length > 0)
         throw new NotFoundException(
           `Bundles (${failedAssetHashs.join(',')}) not found in uploaded files.`,
         );
+
+      const createdAssets = await this.bundleAssetRepo.bulkCreate(bulkCreateAssetsDto, {
+        returning: true,
+      });
 
       this.bundleManifestRepo.create(
         {
