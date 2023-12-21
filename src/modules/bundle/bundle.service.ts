@@ -53,11 +53,14 @@ export class BundleService {
       const platformBundles = metadata.platformMetadata[platform as BundlePlatform];
 
       const createdAssets: BundleAsset[] = [];
+      const failedAssetHashs: string[] = [];
       for (const bundle of platformBundles) {
         const bundleAsset = assets.find(asset => asset.originalname === bundle.hash);
 
-        if (!bundleAsset)
-          throw new NotFoundException(`Bundle "${bundle.hash}" not found in uploaded files.`);
+        if (!bundleAsset) {
+          failedAssetHashs.push(bundle.hash);
+          continue;
+        }
 
         const createdBundleAsset = await this.bundleAssetRepo.create({
           uuid: bundleAsset.filename,
@@ -67,6 +70,10 @@ export class BundleService {
 
         createdAssets.push(createdBundleAsset);
       }
+      if (failedAssetHashs.length > 0)
+        throw new NotFoundException(
+          `Bundles (${failedAssetHashs.join(',')}) not found in uploaded files.`,
+        );
 
       this.bundleManifestRepo.create(
         {
