@@ -1,5 +1,3 @@
-import { BundleAsset } from './models';
-
 export type Bundler = 'webpack' | 'repack' | 'vite';
 export enum BundlePlatform {
   Ios = 'ios',
@@ -14,6 +12,11 @@ export interface ModuleFederationConfig {
   port: string;
   dependencies: Record<string, string>;
   version: string;
+}
+
+interface BundleAsset {
+  hash: string;
+  path: string;
 }
 
 export interface BundleMetadata {
