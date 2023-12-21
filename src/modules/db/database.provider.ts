@@ -49,6 +49,11 @@ export class DatabaseProvider implements SequelizeOptionsFactory {
         idle: 10000,
       },
 
+      // sync: {
+      //   alter: true,
+      //   force: true,
+      // },
+
       autoLoadModels: true,
     };
   }
