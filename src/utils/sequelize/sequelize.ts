@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Include, isNotNullable } from '@util/types';
-import { InferAttributes, InferCreationAttributes, ModelStatic } from 'sequelize';
+import { ModelStatic } from 'sequelize';
 import { Column, Model } from 'sequelize-typescript';
 import { BINARY_UUID } from './types';
 
-export class BaseManifestModel<T extends Model> extends Model<
-  InferAttributes<T>,
-  InferCreationAttributes<T>
-> {
+export class BaseManifestModel<TInferAttributes extends {}, TInferCreationAttributes extends {}>
+  extends Model<TInferAttributes & IBaseManifest, TInferCreationAttributes & IBaseManifest>
+  implements IBaseManifest
+{
   @ApiProperty({
     description: 'manifest uuid',
   })
@@ -24,6 +24,12 @@ export class BaseManifestModel<T extends Model> extends Model<
     description: 'manifest releaseName',
   })
   @Column
+  releaseName: string;
+}
+
+interface IBaseManifest {
+  uuid: string;
+  runtimeVersion: string;
   releaseName: string;
 }
 
