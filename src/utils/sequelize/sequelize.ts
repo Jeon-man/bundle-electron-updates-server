@@ -5,7 +5,10 @@ import { Column, Model } from 'sequelize-typescript';
 import { BINARY_UUID } from './types';
 
 export class BaseManifestModel<TInferAttributes extends {}, TInferCreationAttributes extends {}>
-  extends Model<TInferAttributes & IBaseManifest, TInferCreationAttributes & IBaseManifest>
+  extends Model<
+    TInferAttributes & IBaseManifest,
+    TInferCreationAttributes & Omit<IBaseManifest, 'id' | `${string}At`>
+  >
   implements IBaseManifest
 {
   readonly id: number;
