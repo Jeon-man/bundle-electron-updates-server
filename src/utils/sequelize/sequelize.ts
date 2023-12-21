@@ -23,7 +23,7 @@ export class BaseManifestModel<TInferAttributes extends {}, TInferCreationAttrib
     description: 'manifest version',
   })
   @Column
-  runtimeVersion: string;
+  version: string;
 
   @ApiProperty({
     description: 'manifest releaseName',
@@ -43,7 +43,7 @@ interface IBaseManifest {
   deletedAt?: Date | null;
 
   uuid: string;
-  runtimeVersion: string;
+  version: string;
   releaseName: string;
 }
 

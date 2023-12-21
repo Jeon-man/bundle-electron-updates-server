@@ -28,7 +28,7 @@ export class BundleService {
       Partial<Record<'typeIndexJson', Express.Multer.File>>,
     bundleData: CreateBundleBody,
   ) {
-    const { releaseName, runtimeVersion, metadata, moduleFederationConfig } = bundleData;
+    const { releaseName, version, metadata, moduleFederationConfig } = bundleData;
 
     let typeIndexJsonAsset: BundleAsset | undefined = undefined;
     if (typeAssets && typeIndexJson)
@@ -37,7 +37,7 @@ export class BundleService {
     const commonBundleManifest = {
       uuid: hex2UUID(createHash(Buffer.from(JSON.stringify(metadata)), 'sha256', 'hex')),
       releaseName,
-      runtimeVersion,
+      version,
       bundler: metadata.bundler,
       moduleFederationConfig: moduleFederationConfig as unknown as ModuleFederationConfig,
     };

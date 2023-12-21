@@ -18,13 +18,13 @@ export class GithubService implements OnApplicationBootstrap {
     });
   }
 
-  async getReleaseAssets(runtimeVersion: string, platform: string) {
+  async getReleaseAssets(version: string, platform: string) {
     const {
       data: { assets },
     } = await this.octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
       owner: this.config.get('GIT_OWNER'),
       repo: this.config.get('GIT_REPOSITORY'),
-      tag: `v${runtimeVersion}`,
+      tag: `v${version}`,
     });
 
     const selectedManifestAsset = assets.find(asset => asset.name.includes(platform));

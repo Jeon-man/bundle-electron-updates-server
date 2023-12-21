@@ -16,7 +16,7 @@ export class CreateManifestBody {
   })
   @IsString()
   @IsNotEmpty()
-  runtimeVersion: string;
+  version: string;
 
   @ApiProperty({
     example: 'foo-production',

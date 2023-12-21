@@ -16,34 +16,34 @@ export class ElectronService {
     private readonly githubService: GithubService,
   ) {}
 
-  private getManifestUuid(runtimeVersion: string) {
-    const updateMetadataBuffer = Buffer.from(JSON.stringify(runtimeVersion));
+  private getManifestUuid(version: string) {
+    const updateMetadataBuffer = Buffer.from(JSON.stringify(version));
     return hex2UUID(createHash(updateMetadataBuffer, 'sha256', 'hex'));
   }
 
   async getElectronManifest({
-    runtimeVersion,
+    version,
     releaseName,
     platform,
   }: ManifestQueryDto<ElectronPlatform>) {
     return this.electronManifestRepo.findOne({
-      where: { releaseName, platform, ...(runtimeVersion ? { runtimeVersion } : {}) },
+      where: { releaseName, platform, ...(version ? { version } : {}) },
       order: [['createdAt', 'desc']],
       rejectOnEmpty: new NotFoundException({
-        message: `Cannot Find Manifest of runtimeVersion ${runtimeVersion}`,
-        detail: { runtimeVersion },
+        message: `Cannot Find Manifest of version ${version}`,
+        detail: { version },
       }),
     });
   }
 
-  async createManifest({ runtimeVersion, releaseName, platform }: CreateManifestBody) {
-    const isExist = await this.githubService.existRelease(runtimeVersion);
+  async createManifest({ version, releaseName, platform }: CreateManifestBody) {
+    const isExist = await this.githubService.existRelease(version);
     if (!isExist) throw new BadRequestException('Cannot create a release which does not exist');
 
     const [manifest] = await this.electronManifestRepo.findOrCreate({
       where: {
-        uuid: this.getManifestUuid(runtimeVersion),
-        runtimeVersion,
+        uuid: this.getManifestUuid(version),
+        version,
         releaseName,
         platform,
       },

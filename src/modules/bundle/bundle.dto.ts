@@ -1,20 +1,25 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { FindOptions } from 'sequelize';
 import { BundleMetadata, BundlePlatform } from './bundle.types';
 import { BundleManifest } from './models';
 
 export class CreateBundleBody {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   releaseName: string;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  runtimeVersion: string;
+  version: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   metadata: BundleMetadata;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   moduleFederationConfig: string;
@@ -25,10 +30,12 @@ export class CreateBundleBody {
 }
 
 export class BundleManifestFindQuery {
+  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  runtimeVersion: string;
+  version: string;
 
+  @ApiPropertyOptional({ type: BundlePlatform })
   @IsEnum(BundlePlatform)
   @IsOptional()
   bundlePlatform: BundlePlatform;
@@ -36,7 +43,7 @@ export class BundleManifestFindQuery {
   toFindOptions(): FindOptions<BundleManifest> {
     return {
       where: {
-        ...(this.runtimeVersion ? { runtimeVersion: this.runtimeVersion } : {}),
+        ...(this.version ? { version: this.version } : {}),
         ...(this.bundlePlatform ? { bundlePlatform: this.bundlePlatform } : {}),
       },
     };

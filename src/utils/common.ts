@@ -5,7 +5,7 @@ export class ManifestQueryDto<T> {
   platform: T;
 
   @IsOptional()
-  runtimeVersion?: string;
+  version?: string;
 
   @IsOptional()
   releaseName: string;

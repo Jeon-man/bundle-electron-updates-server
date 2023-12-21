@@ -25,13 +25,13 @@ export class ElectronController {
     @Res() res: Response,
   ) {
     const manifest = await this.electronService.getElectronManifest({
-      runtimeVersion: query.runtimeVersion,
+      version: query.version,
       platform: query.platform,
       releaseName,
     });
 
     const downloadUrl = await this.githubService.getReleaseAssets(
-      manifest.runtimeVersion,
+      manifest.version,
       manifest.platform,
     );
 
