@@ -1,14 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  UploadedFiles,
-  UseInterceptors,
-} from '@nestjs/common';
-import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { UploadAsset } from '@module/multer';
+import { Body, Controller, Get, Param, Post, Query, UploadedFiles } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/sequelize';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Sequelize } from 'sequelize-typescript';
@@ -49,7 +40,7 @@ export class BundleController {
   @ApiOperation({
     summary: 'create bundle manifest with assets',
   })
-  @UseInterceptors(AnyFilesInterceptor())
+  @UploadAsset('bundle')
   @Post('upload')
   async createBundle(
     @UploadedFiles()
