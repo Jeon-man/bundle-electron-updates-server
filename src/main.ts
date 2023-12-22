@@ -72,7 +72,7 @@ async function bootstrap() {
 
   const FILE_LOCAL_STORAGE_PATH = config.get('FILE_LOCAL_STORAGE_PATH');
 
-  if (fs.existsSync(FILE_LOCAL_STORAGE_PATH)) fs.mkdirSync(FILE_LOCAL_STORAGE_PATH);
+  if (!fs.existsSync(FILE_LOCAL_STORAGE_PATH)) fs.mkdirSync(FILE_LOCAL_STORAGE_PATH);
 
   await app.listen(3000);
 }
