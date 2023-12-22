@@ -48,20 +48,20 @@ export class MulterConfigService implements MulterOptionsFactory {
   }
 }
 
-type GetFileDestination = (req: Request, file: Express.Multer.File) => string | Promise<string>;
-type GetFilename = (req: Request, file: Express.Multer.File) => string | Promise<string>;
-type FileFilter = (req: Request, file: Express.Multer.File) => void | Promise<void>;
+type GetFileDestinationFn = (req: Request, file: Express.Multer.File) => string | Promise<string>;
+type GetFilenameFn = (req: Request, file: Express.Multer.File) => string | Promise<string>;
+type FileFilterFn = (req: Request, file: Express.Multer.File) => void | Promise<void>;
 
 export class CustomDiskStorage implements StorageEngine {
-  private getDestination: GetFileDestination;
-  private getFilename: GetFilename;
-  private fileFilter: FileFilter;
+  private getDestination: GetFileDestinationFn;
+  private getFilename: GetFilenameFn;
+  private fileFilter: FileFilterFn;
 
   constructor(
     private readonly options: Omit<DiskStorageOptions, 'destination' | 'filename'> & {
-      destination: GetFileDestination;
-      filename: GetFilename;
-      fileFilter?: FileFilter;
+      destination: GetFileDestinationFn;
+      filename: GetFilenameFn;
+      fileFilter?: FileFilterFn;
     },
   ) {
     this.getDestination = options.destination;
