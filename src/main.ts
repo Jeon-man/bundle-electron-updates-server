@@ -70,15 +70,22 @@ async function bootstrap() {
     customJsStr: `FlareLane.initialize({ projectId: "c95fa7be-3d99-4d6f-8054-1cac6c3ed05a" });`,
   });
 
-  const FILE_LOCAL_STORAGE_PATH = config.get('FILE_LOCAL_STORAGE_PATH');
-
-  if (!fs.existsSync(FILE_LOCAL_STORAGE_PATH)) {
-    fs.mkdirSync(FILE_LOCAL_STORAGE_PATH);
-    fs.mkdirSync(`${FILE_LOCAL_STORAGE_PATH}/expo`);
-    fs.mkdirSync(`${FILE_LOCAL_STORAGE_PATH}/bundle`);
-    fs.mkdirSync(`${FILE_LOCAL_STORAGE_PATH}/electron`);
-  }
+  generateDefaultDir();
 
   await app.listen(3000);
 }
 bootstrap();
+
+function generateDefaultDir() {
+  if (!fs.existsSync('./expo')) {
+    fs.mkdirSync(`./expo`);
+  }
+
+  if (!fs.existsSync('./bundle')) {
+    fs.mkdirSync(`./bundle`);
+  }
+
+  if (!fs.existsSync('./electron')) {
+    fs.mkdirSync(`./electron`);
+  }
+}
