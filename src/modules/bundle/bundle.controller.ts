@@ -21,7 +21,7 @@ export class BundleController {
   })
   @Get('manifests/release/:releaseName/latest')
   async getLatestBundleManifestByReleaseName(
-    @Param('ReleaseName') releaseName: string,
+    @Param('releaseName') releaseName: string,
     @Query() query: BundleManifestFindQuery,
   ) {
     return this.bundleManifestRepo.findOne({
