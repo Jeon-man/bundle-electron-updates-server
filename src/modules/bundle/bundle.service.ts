@@ -64,7 +64,7 @@ export class BundleService {
         }
 
         bulkCreateAssetsDto.push({
-          uuid: bundleAsset.filename,
+          uuid: hex2UUID(bundleAsset.filename),
           hash: bundle.hash,
           path: bundle.path,
         });
