@@ -12,6 +12,8 @@ async function bootstrap() {
   const config: ConfigService = app.get(ConfigService);
   const NODE_ENV = config.get('NODE_ENV');
 
+  app.setGlobalPrefix('api');
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
