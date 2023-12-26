@@ -7,7 +7,7 @@ import { BundleAsset, BundleManifest } from './models';
 
 import fs from 'fs';
 import { CreationAttributes } from 'sequelize';
-import { BundlePlatform } from './bundle.types';
+import { BundlePlatform, RemoteConfig } from './bundle.types';
 
 @Injectable()
 export class BundleService {
@@ -39,7 +39,7 @@ export class BundleService {
       releaseName,
       version,
       bundler: metadata.bundler,
-      remotes,
+      remotes: JSON.parse(remotes) as RemoteConfig,
     };
 
     for (const platform in metadata.platformMetadata) {

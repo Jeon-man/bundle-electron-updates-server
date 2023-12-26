@@ -15,7 +15,7 @@ import {
   HasMany,
   Table,
 } from 'sequelize-typescript';
-import { BundlePlatform, BundlePlatformList, Bundler } from '../bundle.types';
+import { BundlePlatform, BundlePlatformList, Bundler, RemoteConfig } from '../bundle.types';
 import { BundleAsset } from './bundle.asset.model';
 import { BundleManifest_Asset } from './manifest_asset.model';
 
@@ -48,10 +48,10 @@ export class BundleManifest
   platform: BundlePlatform;
 
   @ApiProperty({
-    description: 'Module have federation config',
+    description: 'Module have remote config',
   })
   @Column(JSON_STRING(DataType.TEXT))
-  remotes: string;
+  remotes: RemoteConfig;
 
   @ApiProperty({
     description: 'Bundle typescript index json asset',
@@ -79,7 +79,7 @@ export class BundleManifest
 
 interface IBundleManifest {
   platform: BundlePlatform;
-  remotes: string;
+  remotes: RemoteConfig;
   typeIndexJsonId?: number;
   typeIndexJson?: BundleAsset;
   assets?: BundleAsset[];

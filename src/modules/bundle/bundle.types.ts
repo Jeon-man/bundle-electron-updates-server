@@ -6,12 +6,12 @@ export enum BundlePlatform {
 }
 export const BundlePlatformList = Object.values(BundlePlatform);
 
-export interface ModuleFederationConfig {
+export interface RemoteConfig {
+  type: 'local' | 'server';
   url: string;
   name: string;
-  port: string;
-  dependencies: Record<string, string>;
-  version: string;
+  configName: string;
+  typeIndexJsonUrl: string;
 }
 
 export interface IBundleAsset {
