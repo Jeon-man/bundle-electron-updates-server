@@ -110,7 +110,7 @@ export class BundleService {
     const files = await Promise.all(
       Object.entries(_typeIndexJson.files).map(async ([path, hash]) => {
         const typeFile = typeAssets.find(asset => asset.originalname === hash);
-
+        typeFile?.mimetype;
         if (!typeFile)
           throw new NotFoundException(`Type file "${hash}" not found in uploaded type files.`);
 
@@ -124,6 +124,13 @@ export class BundleService {
       hash: hex2UUID(createHash(Buffer.from(typeIndexJson), 'sha256', 'hex')),
       path: '',
       uuid: typeIndexJsonFile.filename,
+    });
+  }
+
+  async getAsset(uuid: string) {
+    return this.bundleAssetRepo.findOne({
+      where: { uuid },
+      rejectOnEmpty: new NotFoundException(`Not Found Asset(${uuid})`),
     });
   }
 }

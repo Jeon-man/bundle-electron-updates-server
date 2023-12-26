@@ -1,7 +1,18 @@
 import { UploadAsset } from '@module/multer';
-import { Body, Controller, Get, Param, Post, Query, UploadedFiles } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  Param,
+  Post,
+  Query,
+  Res,
+  UploadedFiles,
+} from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/sequelize';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { Sequelize } from 'sequelize-typescript';
 import { BundleManifestFindQuery, CreateBundleBody } from './bundle.dto';
 import { BundleService } from './bundle.service';
@@ -30,11 +41,22 @@ export class BundleController {
       },
       include: [
         { association: BundleManifest.associations.assets },
-        { association: BundleManifest.associations.bundleManifest_asset },
+        { association: BundleManifest.associations.typeIndexJson },
       ],
       order: [['createdAt', 'desc']],
       ...query.toFindOptions(),
     });
+  }
+
+  @ApiOperation({
+    summary: 'get asset file',
+  })
+  @Header('cache-control', 'public, max-age=31536000, immutable')
+  @Get('assets/:assetId')
+  async getAsset(@Param('assetId') assetUuid: string, @Res() res: Response) {
+    const asset = await this.bundleService.getAsset(assetUuid);
+
+    return asset.toStream().pipe(res);
   }
 
   @ApiOperation({

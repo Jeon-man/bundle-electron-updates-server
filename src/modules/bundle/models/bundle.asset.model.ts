@@ -1,5 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BINARY_UUID } from '@util/sequelize/types';
+import { UUID2Hex } from '@util/uuid';
+import appRootPath from 'app-root-path';
+import { createReadStream } from 'fs';
+import pathModule from 'path';
 import { InferAttributes, InferCreationAttributes } from 'sequelize';
 import { Column, Model, Table } from 'sequelize-typescript';
 
@@ -29,4 +33,8 @@ export class BundleAsset extends Model<
   })
   @Column
   path: string;
+
+  toStream() {
+    return createReadStream(pathModule.resolve(appRootPath.path, 'bundle', UUID2Hex(this.uuid)));
+  }
 }

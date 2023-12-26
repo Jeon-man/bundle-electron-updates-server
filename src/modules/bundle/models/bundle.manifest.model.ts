@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseManifestModel } from '@util/sequelize';
 import { JSON_STRING } from '@util/sequelize/types';
 import {
+  BelongsTo as BelongsToAssociation,
   BelongsToMany as BelongsToManyAssociation,
   CreationAttributes,
   HasMany as HasManyAssociation,
@@ -72,6 +73,7 @@ export class BundleManifest
   bundleManifest_asset?: BundleManifest_Asset[];
 
   declare static associations: {
+    typeIndexJson: BelongsToAssociation<BundleManifest, BundleAsset>;
     assets: BelongsToManyAssociation<BundleManifest, BundleAsset>;
     bundleManifest_asset: HasManyAssociation<BundleManifest, BundleManifest_Asset>;
   };
