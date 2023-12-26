@@ -26,6 +26,7 @@ export class BundleAsset extends Model<
   @ApiProperty({
     description: 'file.buffer hash value',
   })
+  @Column
   hash: string;
 
   @ApiProperty({
