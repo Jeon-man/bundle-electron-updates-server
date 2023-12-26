@@ -28,70 +28,74 @@ export class BundleService {
       Partial<Record<'typeIndexJson', Express.Multer.File>>,
     bundleData: CreateBundleBody,
   ) {
-    const { releaseName, version, metadata, remotes } = bundleData;
+    try {
+      const { releaseName, version, metadata, remotes } = bundleData;
 
-    let typeIndexJsonAsset: BundleAsset | undefined = undefined;
-    if (typeAssets && typeIndexJson)
-      typeIndexJsonAsset = await this.createTypeAssets(typeAssets, typeIndexJson);
+      let typeIndexJsonAsset: BundleAsset | undefined = undefined;
+      if (typeAssets && typeIndexJson)
+        typeIndexJsonAsset = await this.createTypeAssets(typeAssets, typeIndexJson);
 
-    const commonBundleManifest = {
-      uuid: hex2UUID(createHash(Buffer.from(JSON.stringify(metadata)), 'sha256', 'hex')),
-      releaseName,
-      version,
-      bundler: metadata.bundler,
-      remotes: JSON.parse(remotes) as RemoteConfig,
-    };
+      const commonBundleManifest = {
+        uuid: hex2UUID(createHash(Buffer.from(JSON.stringify(metadata)), 'sha256', 'hex')),
+        releaseName,
+        version,
+        bundler: metadata.bundler,
+        remotes: JSON.parse(remotes) as RemoteConfig,
+      };
 
-    for (const platform in metadata.platformMetadata) {
-      const existRelease = await this.bundleManifestRepo.findOne({
-        where: {
-          ...commonBundleManifest,
-        },
-      });
+      for (const platform in metadata.platformMetadata) {
+        const existRelease = await this.bundleManifestRepo.findOne({
+          where: {
+            ...commonBundleManifest,
+          },
+        });
 
-      if (existRelease) continue;
+        if (existRelease) continue;
 
-      const platformBundles = metadata.platformMetadata[platform as BundlePlatform];
+        const platformBundles = metadata.platformMetadata[platform as BundlePlatform];
 
-      const bulkCreateAssetsDto: CreationAttributes<BundleAsset>[] = [];
-      const failedAssetHashs: string[] = [];
-      for (const bundle of platformBundles) {
-        const bundleAsset = assets.find(asset => asset.originalname === bundle.hash);
+        const bulkCreateAssetsDto: CreationAttributes<BundleAsset>[] = [];
+        const failedAssetHashs: string[] = [];
+        for (const bundle of platformBundles) {
+          const bundleAsset = assets.find(asset => asset.originalname === bundle.hash);
 
-        if (!bundleAsset) {
-          failedAssetHashs.push(bundle.hash);
-          continue;
+          if (!bundleAsset) {
+            failedAssetHashs.push(bundle.hash);
+            continue;
+          }
+
+          bulkCreateAssetsDto.push({
+            uuid: hex2UUID(bundleAsset.filename),
+            hash: bundle.hash,
+            path: bundle.path,
+          });
         }
 
-        bulkCreateAssetsDto.push({
-          uuid: hex2UUID(bundleAsset.filename),
-          hash: bundle.hash,
-          path: bundle.path,
+        if (failedAssetHashs.length > 0)
+          throw new NotFoundException(
+            `Bundles (${failedAssetHashs.join(',')}) not found in uploaded files.`,
+          );
+
+        const createdAssets = await this.bundleAssetRepo.bulkCreate(bulkCreateAssetsDto, {
+          returning: true,
         });
-      }
 
-      if (failedAssetHashs.length > 0)
-        throw new NotFoundException(
-          `Bundles (${failedAssetHashs.join(',')}) not found in uploaded files.`,
+        await this.bundleManifestRepo.create(
+          {
+            ...commonBundleManifest,
+            platform: platform as BundlePlatform,
+            bundleManifest_asset: createdAssets.map(asset => ({
+              bundleAssetId: asset.id,
+            })),
+            ...(typeIndexJsonAsset ? { typeIndexJsonId: typeIndexJsonAsset.id } : {}),
+          },
+          {
+            include: { association: BundleManifest.associations.bundleManifest_asset },
+          },
         );
-
-      const createdAssets = await this.bundleAssetRepo.bulkCreate(bulkCreateAssetsDto, {
-        returning: true,
-      });
-
-      this.bundleManifestRepo.create(
-        {
-          ...commonBundleManifest,
-          platform: platform as BundlePlatform,
-          bundleManifest_asset: createdAssets.map(asset => ({
-            bundleAssetId: asset.id,
-          })),
-          ...(typeIndexJsonAsset ? { typeIndexJsonId: typeIndexJsonAsset.id } : {}),
-        },
-        {
-          include: { association: BundleManifest.associations.bundleManifest_asset },
-        },
-      );
+      }
+    } catch (err) {
+      throw err;
     }
   }
 
