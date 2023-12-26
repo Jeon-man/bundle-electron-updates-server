@@ -43,6 +43,7 @@ export class BundleAsset extends Model<
     return {
       uuid: UUID2Hex(this.uuid),
       hash: this.hash,
+      path: this.path,
       url: `${host}/${this.uuid}`,
     };
   }
