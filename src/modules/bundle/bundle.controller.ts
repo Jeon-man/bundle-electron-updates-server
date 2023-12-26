@@ -44,9 +44,7 @@ export class BundleController {
   @Post('upload')
   async createBundle(
     @UploadedFiles()
-    bundleFiles: Record<'assets', Express.Multer.File[]> &
-      Partial<Record<'types', Express.Multer.File[]>> &
-      Partial<Record<'typeIndexJson', Express.Multer.File>>,
+    bundleFiles: Express.Multer.File[],
     @Body() bundleData: CreateBundleBody,
   ) {
     /** @todo Define swagger body on this*/

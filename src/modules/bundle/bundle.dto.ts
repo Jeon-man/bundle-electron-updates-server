@@ -17,15 +17,15 @@ export class CreateBundleBody {
 
   @ApiProperty()
   @IsNotEmpty()
-  metadata: BundleMetadata;
+  metadata: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   remotes: string;
 
-  getPlatformMetadata() {
-    return { ...this.metadata.platformMetadata };
+  getMetadata() {
+    return JSON.parse(this.metadata) as BundleMetadata;
   }
 }
 

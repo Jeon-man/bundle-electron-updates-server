@@ -22,7 +22,7 @@ export interface IBundleAsset {
 export interface BundleMetadata {
   version: 0;
   bundler: Bundler;
-  platformMetadata: Record<BundlePlatform, IBundleAsset[]>;
+  bundleMetadata: Record<BundlePlatform, IBundleAsset[]>;
 }
 
 export const hexUuidRegexRaw = '[0-9a-f]{32}';

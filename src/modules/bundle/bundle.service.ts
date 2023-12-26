@@ -18,18 +18,16 @@ export class BundleService {
     private readonly bundleAssetRepo: typeof BundleAsset,
   ) {}
 
-  async createBundle(
-    {
-      assets,
-      types: typeAssets,
-      typeIndexJson,
-    }: Record<'assets', Express.Multer.File[]> &
-      Partial<Record<'types', Express.Multer.File[]>> &
-      Partial<Record<'typeIndexJson', Express.Multer.File>>,
-    bundleData: CreateBundleBody,
-  ) {
+  async createBundle(bundleFiles: Express.Multer.File[], bundleData: CreateBundleBody) {
     try {
-      const { releaseName, version, metadata, remotes } = bundleData;
+      const { releaseName, version, remotes } = bundleData;
+
+      const metadata = bundleData.getMetadata();
+
+      const assets = bundleFiles.filter(file => file.fieldname === 'assets');
+      const typeAssets = bundleFiles.filter(file => file.fieldname === 'types') || undefined;
+      const typeIndexJson =
+        bundleFiles.filter(file => file.fieldname === 'typeIndexJson')[0] || undefined;
 
       let typeIndexJsonAsset: BundleAsset | undefined = undefined;
       if (typeAssets && typeIndexJson)
@@ -43,7 +41,7 @@ export class BundleService {
         remotes: JSON.parse(remotes) as RemoteConfig,
       };
 
-      for (const platform in metadata.platformMetadata) {
+      for (const platform in metadata.bundleMetadata) {
         const existRelease = await this.bundleManifestRepo.findOne({
           where: {
             ...commonBundleManifest,
@@ -52,7 +50,7 @@ export class BundleService {
 
         if (existRelease) continue;
 
-        const platformBundles = metadata.platformMetadata[platform as BundlePlatform];
+        const platformBundles = metadata.bundleMetadata[platform as BundlePlatform];
 
         const bulkCreateAssetsDto: CreationAttributes<BundleAsset>[] = [];
         const failedAssetHashs: string[] = [];
@@ -65,7 +63,7 @@ export class BundleService {
           }
 
           bulkCreateAssetsDto.push({
-            uuid: hex2UUID(bundleAsset.filename),
+            uuid: bundleAsset.filename,
             hash: bundle.hash,
             path: bundle.path,
           });
