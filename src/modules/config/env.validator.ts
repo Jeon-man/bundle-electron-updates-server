@@ -30,6 +30,9 @@ export class EnvironmentVariables {
   @IsString()
   APP_NAME: string;
 
+  @IsString()
+  HOSTNAME: string;
+
   @IsOptional()
   @IsNumber({ allowInfinity: false, allowNaN: false })
   PORT: number = 3000 as const;

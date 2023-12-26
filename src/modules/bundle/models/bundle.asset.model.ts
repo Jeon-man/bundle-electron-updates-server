@@ -37,4 +37,12 @@ export class BundleAsset extends Model<
   toStream() {
     return createReadStream(pathModule.resolve(appRootPath.path, 'bundle', UUID2Hex(this.uuid)));
   }
+
+  toResponse(host: string) {
+    return {
+      uuid: UUID2Hex(this.uuid),
+      hash: this.hash,
+      url: `${host}/${this.uuid}`,
+    };
+  }
 }

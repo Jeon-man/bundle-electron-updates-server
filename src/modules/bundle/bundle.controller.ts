@@ -4,12 +4,14 @@ import {
   Controller,
   Get,
   Header,
+  NotFoundException,
   Param,
   Post,
   Query,
   Res,
   UploadedFiles,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectConnection, InjectModel } from '@nestjs/sequelize';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -25,6 +27,7 @@ export class BundleController {
     @InjectConnection() private readonly sequelize: Sequelize,
     @InjectModel(BundleManifest) private readonly bundleManifestRepo: typeof BundleManifest,
     private readonly bundleService: BundleService,
+    private readonly config: ConfigService,
   ) {}
 
   @ApiOperation({
@@ -35,17 +38,30 @@ export class BundleController {
     @Param('releaseName') releaseName: string,
     @Query() query: BundleManifestFindQuery,
   ) {
-    return this.bundleManifestRepo.findOne({
+    const manifest = await this.bundleManifestRepo.findOne({
       where: {
         releaseName,
       },
       include: [
-        { association: BundleManifest.associations.assets },
+        { association: BundleManifest.associations.assets, required: true },
         { association: BundleManifest.associations.typeIndexJson },
       ],
       order: [['createdAt', 'desc']],
       ...query.toFindOptions(),
+      rejectOnEmpty: new NotFoundException(`Not Found bundle manifest(${releaseName})`),
     });
+
+    const host = `${this.config.get('HOSTNAME')}/api/bundle/assets`;
+
+    return {
+      id: manifest.uuid,
+      version: manifest.version,
+      platform: manifest.platform,
+      remotes: manifest.remotes,
+      bundler: manifest.bundler,
+      assets: manifest.assets?.map(asset => asset.toResponse(host)),
+      typeIndexJson: manifest.typeIndexJson?.toResponse(host),
+    };
   }
 
   @ApiOperation({
