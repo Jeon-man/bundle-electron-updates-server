@@ -15,12 +15,7 @@ import {
   HasMany,
   Table,
 } from 'sequelize-typescript';
-import {
-  BundlePlatform,
-  BundlePlatformList,
-  Bundler,
-  ModuleFederationConfig,
-} from '../bundle.types';
+import { BundlePlatform, BundlePlatformList, Bundler } from '../bundle.types';
 import { BundleAsset } from './bundle.asset.model';
 import { BundleManifest_Asset } from './manifest_asset.model';
 
@@ -56,7 +51,7 @@ export class BundleManifest
     description: 'Module have federation config',
   })
   @Column(JSON_STRING(DataType.TEXT))
-  moduleFederationConfig: ModuleFederationConfig;
+  remotes: string;
 
   @ApiProperty({
     description: 'Bundle typescript index json asset',
@@ -84,7 +79,7 @@ export class BundleManifest
 
 interface IBundleManifest {
   platform: BundlePlatform;
-  moduleFederationConfig: ModuleFederationConfig;
+  remotes: string;
   typeIndexJsonId?: number;
   typeIndexJson?: BundleAsset;
   assets?: BundleAsset[];

@@ -7,7 +7,7 @@ import { BundleAsset, BundleManifest } from './models';
 
 import fs from 'fs';
 import { CreationAttributes } from 'sequelize';
-import { BundlePlatform, ModuleFederationConfig } from './bundle.types';
+import { BundlePlatform } from './bundle.types';
 
 @Injectable()
 export class BundleService {
@@ -28,7 +28,7 @@ export class BundleService {
       Partial<Record<'typeIndexJson', Express.Multer.File>>,
     bundleData: CreateBundleBody,
   ) {
-    const { releaseName, version, metadata, moduleFederationConfig } = bundleData;
+    const { releaseName, version, metadata, remotes } = bundleData;
 
     let typeIndexJsonAsset: BundleAsset | undefined = undefined;
     if (typeAssets && typeIndexJson)
@@ -39,7 +39,7 @@ export class BundleService {
       releaseName,
       version,
       bundler: metadata.bundler,
-      moduleFederationConfig: moduleFederationConfig as unknown as ModuleFederationConfig,
+      remotes,
     };
 
     for (const platform in metadata.platformMetadata) {

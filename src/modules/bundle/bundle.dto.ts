@@ -22,7 +22,7 @@ export class CreateBundleBody {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  moduleFederationConfig: string;
+  remotes: string;
 
   getPlatformMetadata() {
     return { ...this.metadata.platformMetadata };
