@@ -102,26 +102,35 @@ export class BundleService {
     typeIndexJsonFile: Express.Multer.File,
   ) {
     const typeIndexJsonFsFile = await fs.promises.readFile(typeIndexJsonFile.path, 'utf-8');
-    const _typeIndexJson = JSON.parse(typeIndexJsonFsFile) as {
+    const typeIndexJson = JSON.parse(typeIndexJsonFsFile) as {
       publicPath: string;
-      files: Record<string, string>;
+      files: { hash: string; path: string }[];
     };
 
-    const files = await Promise.all(
-      Object.entries(_typeIndexJson.files).map(async ([path, hash]) => {
-        const typeFile = typeAssets.find(asset => asset.originalname === hash);
-        typeFile?.mimetype;
-        if (!typeFile)
-          throw new NotFoundException(`Type file "${hash}" not found in uploaded type files.`);
+    const undefinedFile: string[] = [];
+    const typeAssetsDto = typeAssets
+      .filter(asset => {
+        const findAssetToIndexJson = typeIndexJson.files.find(
+          file => file.hash === asset.originalname,
+        );
 
-        return this.bundleAssetRepo.create({ hash, path, uuid: typeFile.filename });
-      }),
-    );
+        if (!findAssetToIndexJson) {
+          undefinedFile.push(asset.originalname);
+          return false;
+        }
+        return true;
+      })
+      .map(asset => ({ hash: asset.originalname, path: asset.path, uuid: asset.filename }));
 
-    const typeIndexJson = JSON.stringify({ ..._typeIndexJson, files });
+    if (undefinedFile.length > 0)
+      throw new NotFoundException(
+        `Not found asset file(${undefinedFile.join(', ')}) into typeIndex`,
+      );
+
+    await this.bundleAssetRepo.bulkCreate(typeAssetsDto);
 
     return this.bundleAssetRepo.create({
-      hash: hex2UUID(createHash(Buffer.from(typeIndexJson), 'sha256', 'hex')),
+      hash: typeIndexJsonFile.originalname,
       path: '',
       uuid: typeIndexJsonFile.filename,
     });
