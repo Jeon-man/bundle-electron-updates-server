@@ -8,7 +8,9 @@ import fs from 'fs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    cors: false,
+    cors: {
+      origin: false,
+    },
   });
 
   const config: ConfigService = app.get(ConfigService);
