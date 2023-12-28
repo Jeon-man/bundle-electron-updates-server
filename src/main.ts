@@ -7,7 +7,9 @@ import Case from 'case';
 import fs from 'fs';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: false,
+  });
 
   const config: ConfigService = app.get(ConfigService);
   const NODE_ENV = config.get('NODE_ENV');
