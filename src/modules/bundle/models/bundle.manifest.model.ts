@@ -52,7 +52,7 @@ export class BundleManifest
     description: 'Module have remote config',
   })
   @Column(JSON_STRING(DataType.TEXT))
-  remotes: RemoteConfig;
+  remotes: RemoteConfig[];
 
   @ApiProperty({
     description: 'Bundle typescript index json asset',
@@ -81,7 +81,7 @@ export class BundleManifest
 
 interface IBundleManifest {
   platform: BundlePlatform;
-  remotes: RemoteConfig;
+  remotes: RemoteConfig[];
   typeIndexJsonId?: number;
   typeIndexJson?: BundleAsset;
   assets?: BundleAsset[];

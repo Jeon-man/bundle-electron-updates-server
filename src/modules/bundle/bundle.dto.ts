@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { FindOptions } from 'sequelize';
-import { BundleMetadata, BundlePlatform } from './bundle.types';
+import { BundleMetadata, BundlePlatform, RemoteConfig } from './bundle.types';
 import { BundleManifest } from './models';
 
 export class CreateBundleBody {
@@ -26,6 +26,10 @@ export class CreateBundleBody {
 
   getMetadata() {
     return JSON.parse(this.metadata) as BundleMetadata;
+  }
+
+  getRemotes() {
+    return JSON.parse(this.remotes) as RemoteConfig[];
   }
 }
 

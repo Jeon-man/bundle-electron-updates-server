@@ -7,7 +7,7 @@ import { BundleAsset, BundleManifest } from './models';
 
 import fs from 'fs';
 import { CreationAttributes } from 'sequelize';
-import { BundlePlatform, RemoteConfig } from './bundle.types';
+import { BundlePlatform } from './bundle.types';
 
 @Injectable()
 export class BundleService {
@@ -20,7 +20,7 @@ export class BundleService {
 
   async createBundle(bundleFiles: Express.Multer.File[], bundleData: CreateBundleBody) {
     try {
-      const { releaseName, version, remotes } = bundleData;
+      const { releaseName, version } = bundleData;
 
       const metadata = bundleData.getMetadata();
 
@@ -38,7 +38,6 @@ export class BundleService {
         releaseName,
         version,
         bundler: metadata.bundler,
-        remotes: JSON.parse(remotes) as RemoteConfig,
       };
 
       for (const platform in metadata.bundleMetadata) {
@@ -81,6 +80,7 @@ export class BundleService {
         await this.bundleManifestRepo.create(
           {
             ...commonBundleManifest,
+            remotes: bundleData.getRemotes(),
             platform: platform as BundlePlatform,
             bundleManifest_asset: createdAssets.map(asset => ({
               bundleAssetId: asset.id,
