@@ -35,6 +35,7 @@ export class BundleService {
 
       const commonBundleManifest = {
         uuid: hex2UUID(createHash(Buffer.from(JSON.stringify(metadata)), 'sha256', 'hex')),
+        remotes: bundleData.getRemotes(),
         releaseName,
         version,
         bundler: metadata.bundler,
@@ -80,7 +81,6 @@ export class BundleService {
         await this.bundleManifestRepo.create(
           {
             ...commonBundleManifest,
-            remotes: bundleData.getRemotes(),
             platform: platform as BundlePlatform,
             bundleManifest_asset: createdAssets.map(asset => ({
               bundleAssetId: asset.id,
