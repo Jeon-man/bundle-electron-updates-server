@@ -39,16 +39,17 @@ export class BundleController {
     @Param('releaseName') releaseName: string,
     @Query() query: BundleManifestFindQuery,
   ) {
+    const { where } = query.toFindOptions();
     const manifest = await this.bundleManifestRepo.findOne({
       where: {
         releaseName,
+        ...where,
       },
       include: [
         { association: BundleManifest.associations.assets, required: true },
         { association: BundleManifest.associations.typeIndexJson },
       ],
       order: [['createdAt', 'desc']],
-      ...query.toFindOptions(),
       rejectOnEmpty: new NotFoundException(`Not Found bundle manifest(${releaseName})`),
     });
 
