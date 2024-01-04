@@ -74,6 +74,7 @@ export class BundleController {
   async getAsset(@Param('assetId') assetUuid: string, @Res() res: Response) {
     const asset = await this.bundleService.getAsset(assetUuid);
 
+    res.setHeader('content-type', asset.contentType as string);
     return asset.toStream().pipe(res);
   }
 

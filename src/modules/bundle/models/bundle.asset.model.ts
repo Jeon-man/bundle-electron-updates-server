@@ -35,6 +35,14 @@ export class BundleAsset extends Model<
   @Column
   path: string;
 
+  @ApiProperty({
+    description: 'Asset file mime type',
+  })
+  @Column({
+    defaultValue: 'application/javascript',
+  })
+  contentType?: string;
+
   toStream() {
     return createReadStream(pathModule.resolve(appRootPath.path, 'bundle', UUID2Hex(this.uuid)));
   }
