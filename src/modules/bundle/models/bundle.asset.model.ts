@@ -5,7 +5,7 @@ import appRootPath from 'app-root-path';
 import { createReadStream } from 'fs';
 import pathModule from 'path';
 import { InferAttributes, InferCreationAttributes } from 'sequelize';
-import { Column, ForeignKey, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { Column, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { BundleManifest } from './bundle.manifest.model';
 
 @Table({
@@ -13,6 +13,7 @@ import { BundleManifest } from './bundle.manifest.model';
   modelName: 'Bundle',
   timestamps: true,
   paranoid: true,
+  indexes: [{ name: 'asset_unique_key', unique: true, fields: ['manifestId', 'hash'] }],
 })
 export class BundleAsset extends Model<
   InferAttributes<BundleAsset>,
@@ -21,7 +22,6 @@ export class BundleAsset extends Model<
   @ApiProperty({
     description: 'manifestId',
   })
-  @PrimaryKey
   @ForeignKey(() => BundleManifest)
   @Column
   manifestId: number;
@@ -35,7 +35,6 @@ export class BundleAsset extends Model<
   @ApiProperty({
     description: 'file.buffer hash value',
   })
-  @PrimaryKey
   @Column
   hash: string;
 
