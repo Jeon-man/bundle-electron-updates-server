@@ -142,4 +142,11 @@ export class BundleService {
       rejectOnEmpty: new NotFoundException(`Not Found Asset(${uuid})`),
     });
   }
+
+  async getAssetByPath(manifestId: number, path: string) {
+    return this.bundleAssetRepo.findOne({
+      where: { manifestId, path },
+      rejectOnEmpty: new NotFoundException(`Not Found Asset(${path}) in manifest(${manifestId})`),
+    });
+  }
 }

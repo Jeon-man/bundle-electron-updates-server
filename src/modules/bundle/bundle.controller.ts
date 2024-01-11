@@ -79,6 +79,22 @@ export class BundleController {
   }
 
   @ApiOperation({
+    summary: 'get asset file',
+  })
+  @Header('cache-control', 'public, max-age=31536000, immutable')
+  @Get('manifests/:manifestId/assets/*')
+  async getAssetWithPath(
+    @Param('manifestId') manifestId: number,
+    @Param('0') path: string,
+    @Res() res: Response,
+  ) {
+    const asset = await this.bundleService.getAssetByPath(manifestId, path);
+
+    res.setHeader('content-type', asset.contentType as string);
+    return asset.toStream().pipe(res);
+  }
+
+  @ApiOperation({
     summary: 'create bundle manifest with assets',
   })
   @UploadAsset('bundle')
