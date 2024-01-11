@@ -5,7 +5,8 @@ import appRootPath from 'app-root-path';
 import { createReadStream } from 'fs';
 import pathModule from 'path';
 import { InferAttributes, InferCreationAttributes } from 'sequelize';
-import { Column, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { Column, ForeignKey, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { BundleManifest } from './bundle.manifest.model';
 
 @Table({
   tableName: 'Bundle',
@@ -21,6 +22,7 @@ export class BundleAsset extends Model<
     description: 'manifestId',
   })
   @PrimaryKey
+  @ForeignKey(() => BundleManifest)
   @Column
   manifestId: number;
 
