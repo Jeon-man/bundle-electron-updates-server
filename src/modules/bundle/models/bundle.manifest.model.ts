@@ -3,22 +3,12 @@ import { BaseManifestModel } from '@util/sequelize';
 import { JSON_STRING } from '@util/sequelize/types';
 import {
   BelongsTo as BelongsToAssociation,
-  BelongsToMany as BelongsToManyAssociation,
   CreationAttributes,
-  HasMany as HasManyAssociation,
+  HasMany as HasManyToAssociation,
 } from 'sequelize';
-import {
-  BelongsTo,
-  BelongsToMany,
-  Column,
-  DataType,
-  ForeignKey,
-  HasMany,
-  Table,
-} from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Table } from 'sequelize-typescript';
 import { BundlePlatform, BundlePlatformList, Bundler, RemoteConfig } from '../bundle.types';
 import { BundleAsset } from './bundle.asset.model';
-import { BundleManifest_Asset } from './manifest_asset.model';
 
 @Table({
   tableName: 'BundleManifest',
@@ -66,16 +56,12 @@ export class BundleManifest
   @BelongsTo(() => BundleAsset)
   typeIndexJson?: BundleAsset;
 
-  @BelongsToMany(() => BundleAsset, () => BundleManifest_Asset)
+  @HasMany(() => BundleAsset)
   assets?: BundleAsset[];
-
-  @HasMany(() => BundleManifest_Asset)
-  bundleManifest_asset?: BundleManifest_Asset[];
 
   declare static associations: {
     typeIndexJson: BelongsToAssociation<BundleManifest, BundleAsset>;
-    assets: BelongsToManyAssociation<BundleManifest, BundleAsset>;
-    bundleManifest_asset: HasManyAssociation<BundleManifest, BundleManifest_Asset>;
+    assets: HasManyToAssociation<BundleManifest, BundleAsset>;
   };
 }
 
@@ -85,7 +71,6 @@ interface IBundleManifest {
   typeIndexJsonId?: number;
   typeIndexJson?: BundleAsset;
   assets?: BundleAsset[];
-  bundleManifest_asset?: BundleManifest_Asset[];
 }
 
 interface BundleManifestAttributes
@@ -95,5 +80,4 @@ interface BundleManifestCreationAttributes
   extends Omit<BundleManifestAttributes, 'id' | `${string}At`> {
   typeIndexJson?: CreationAttributes<BundleAsset>;
   assets?: CreationAttributes<BundleAsset>[];
-  bundleManifest_asset?: Partial<CreationAttributes<BundleManifest_Asset>>[];
 }

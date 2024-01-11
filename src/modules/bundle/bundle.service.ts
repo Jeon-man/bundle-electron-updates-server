@@ -29,10 +29,6 @@ export class BundleService {
       const typeIndexJson =
         bundleFiles.filter(file => file.fieldname === 'typeIndexJson')[0] || undefined;
 
-      let typeIndexJsonAsset: BundleAsset | undefined = undefined;
-      if (typeAssets && typeIndexJson)
-        typeIndexJsonAsset = await this.createTypeAssets(typeAssets, typeIndexJson);
-
       const commonBundleManifest = {
         uuid: hex2UUID(createHash(Buffer.from(JSON.stringify(metadata)), 'sha256', 'hex')),
 
@@ -50,6 +46,12 @@ export class BundleService {
 
         if (existRelease) continue;
 
+        const manifest = await this.bundleManifestRepo.create({
+          ...commonBundleManifest,
+          remotes: bundleData.getRemotes(),
+          platform: platform as BundlePlatform,
+        });
+
         const platformBundles = metadata.bundleMetadata[platform as BundlePlatform];
 
         const bulkCreateAssetsDto: CreationAttributes<BundleAsset>[] = [];
@@ -63,6 +65,7 @@ export class BundleService {
           }
 
           bulkCreateAssetsDto.push({
+            manifestId: manifest.id,
             uuid: bundleAsset.filename,
             hash: bundle.hash,
             path: bundle.path,
@@ -74,24 +77,13 @@ export class BundleService {
             `Bundles (${failedAssetHashs.join(',')}) not found in uploaded files.`,
           );
 
-        const createdAssets = await this.bundleAssetRepo.bulkCreate(bulkCreateAssetsDto, {
-          returning: true,
-        });
+        let typeIndexJsonAsset: BundleAsset | undefined = undefined;
+        if (typeAssets && typeIndexJson)
+          typeIndexJsonAsset = await this.createTypeAssets(manifest.id, typeAssets, typeIndexJson);
 
-        await this.bundleManifestRepo.create(
-          {
-            ...commonBundleManifest,
-            remotes: bundleData.getRemotes(),
-            platform: platform as BundlePlatform,
-            bundleManifest_asset: createdAssets.map(asset => ({
-              bundleAssetId: asset.id,
-            })),
-            ...(typeIndexJsonAsset ? { typeIndexJsonId: typeIndexJsonAsset.id } : {}),
-          },
-          {
-            include: { association: BundleManifest.associations.bundleManifest_asset },
-          },
-        );
+        if (typeIndexJsonAsset) await manifest.update({ typeIndexJsonId: typeIndexJsonAsset.id });
+
+        await this.bundleAssetRepo.bulkCreate(bulkCreateAssetsDto);
       }
     } catch (err) {
       throw err;
@@ -99,6 +91,7 @@ export class BundleService {
   }
 
   async createTypeAssets(
+    manifestId: number,
     typeAssets: Express.Multer.File[],
     typeIndexJsonFile: Express.Multer.File,
   ) {
@@ -121,7 +114,12 @@ export class BundleService {
         }
         return true;
       })
-      .map(asset => ({ hash: asset.originalname, path: asset.path, uuid: asset.filename }));
+      .map(asset => ({
+        manifestId,
+        hash: asset.originalname,
+        path: asset.path,
+        uuid: asset.filename,
+      }));
 
     if (undefinedFile.length > 0)
       throw new NotFoundException(
@@ -131,6 +129,7 @@ export class BundleService {
     await this.bundleAssetRepo.bulkCreate(typeAssetsDto);
 
     return this.bundleAssetRepo.create({
+      manifestId,
       hash: typeIndexJsonFile.originalname,
       path: '',
       uuid: typeIndexJsonFile.filename,
