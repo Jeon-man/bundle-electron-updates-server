@@ -56,7 +56,7 @@ export class BundleController {
     const host = `${this.config.get('HOSTNAME')}/api/bundle/assets`;
 
     return {
-      id: manifest.uuid,
+      id: manifest.id,
       version: manifest.version,
       platform: manifest.platform,
       remotes: manifest.remotes,
