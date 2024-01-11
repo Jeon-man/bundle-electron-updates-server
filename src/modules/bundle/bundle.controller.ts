@@ -79,7 +79,7 @@ export class BundleController {
   }
 
   @ApiOperation({
-    summary: 'get asset file',
+    summary: 'get asset file by manifestId & path',
   })
   @Header('cache-control', 'public, max-age=31536000, immutable')
   @Get('manifests/:manifestId/assets/*')
