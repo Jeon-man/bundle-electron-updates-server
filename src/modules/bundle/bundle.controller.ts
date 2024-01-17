@@ -33,7 +33,9 @@ export class BundleController {
   @ApiOperation({
     summary: 'get latest bundle manifest',
   })
-  @Header('cache-control', 'private, max-age=0')
+  @Header('Cache-Control', 'no-cache, no-store, must-revalidate')
+  @Header('Pragma', 'no-cache')
+  @Header('Expires', '0')
   @Get('manifests/release/:releaseName/latest')
   async getLatestBundleManifestByReleaseName(
     @Param('releaseName') releaseName: string,
