@@ -38,14 +38,6 @@ export class BundleService {
       };
 
       for (const platform in metadata.bundleMetadata) {
-        const existRelease = await this.bundleManifestRepo.findOne({
-          where: {
-            ...commonBundleManifest,
-          },
-        });
-
-        if (existRelease) continue;
-
         const manifest = await this.bundleManifestRepo.create({
           ...commonBundleManifest,
           remotes: bundleData.getRemotes(),
