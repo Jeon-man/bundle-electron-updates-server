@@ -51,7 +51,10 @@ export class BundleController {
         { association: BundleManifest.associations.assets, required: true },
         { association: BundleManifest.associations.typeIndexJson },
       ],
-      order: [['createdAt', 'desc']],
+      order: [
+        ['createdAt', 'desc'],
+        ['id', 'desc'],
+      ],
       rejectOnEmpty: new NotFoundException(`Not Found bundle manifest(${releaseName})`),
     });
 
